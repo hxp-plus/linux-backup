@@ -19,6 +19,6 @@ Create comments.txt in the same directory image lies with nano.
 
 2. Hint on restoring integrated in script comments.
 
-3. Use multi thread to compress with pigz.
+3. Use multi-thread to compress with pigz.
 
 
