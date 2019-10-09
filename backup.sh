@@ -25,11 +25,11 @@ echo
 # Backup the files using dd.
 mkdir backup
 mkdir $dest
-touch "$dest/comments.txt"
-nano "$dest/comments.txt"
+touch "$dest/comments-$day.txt"
+nano "$dest/comments-$day.txt"
 time dd if=/dev/sda conv=sync,noerror bs=64K status=progress | pigz -c > $dest/$archive_filename
-sfdisk -d /dev/sda > $dest/sda.dump
-fdisk -l /dev/sda > $dest/fdisk.info
+sfdisk -d /dev/sda > $dest/sda-$day.dump
+fdisk -l /dev/sda > $dest/fdisk-$day.info
 # Print end status message.
 echo
 echo "Backup finished"
