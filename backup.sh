@@ -1,61 +1,41 @@
 #!/bin/bash
 
 # author: Xiping Hu
-# email: hxp@hust.edu.cn
+# email: XipingHu@hust.edu.cn
 
 # Usage:
 # chwod +x backup.sh
 # sudo ./backup.sh
-
-
-# What to backup.
-echo "What to backup?(default:/home /var /lib /bin /usr /etc /root /boot /opt)"
-read backup_files
-if ["$backup_files" == ""]
-   then
-       backup_files="/home /var /lib /bin /usr /etc /root /boot /opt"
-fi
-
-
-# Where to backup to.
-echo "Where to Backup?(default:/mnt/backup)"
-read dest
-if ["$dest" == ""]
-then
-   dest="/mnt/backup"
-fi
-if [ ! -d "$dest" ]
-then
-    mkdir "$dest"
-fi
-    
+# Restore: 
+# Restore Partitiontable: sfdisk /dev/sda < sda.dump
+# Restore all disk: pigz -dc /path/to/backup.img.gz | dd of=/dev/sda status=progress
 
 # Create archive filename.
-day=$(date +"%m-%d-%Y-%H:%M:%S")
-hostname=$(hostname -s)
-archive_filename="$hostname-$day.tgz"
+ln -sf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
 
+day=$(date +"%Y-%m-%d_%H-%M-%S")
+hostname="hxp-arch"
+archive_filename="$hostname-$day.img.gz"
+dest="./backup/$(date +"%Y-%m-%d")"
 
 # Print start status message.
-echo "Backing up $backup_files to $dest/$archive_filename"
-date
+echo "Backing up /dev/sda to $dest/$archive_filename"
 echo
 
-
-# Backup the files using tar.
-tar czf $dest/$archive_filename $backup_files
-
-
+# Backup the files using dd.
+mkdir backup
+mkdir $dest
+touch "$dest/comments.txt"
+nano "$dest/comments.txt"
+time dd if=/dev/sda conv=sync,noerror bs=64K status=progress | pigz -c > $dest/$archive_filename
+sfdisk -d /dev/sda > $dest/sda.dump
+fdisk -l /dev/sda > $dest/fdisk.info
 # Print end status message.
 echo
 echo "Backup finished"
 date
 
-
 # Long listing of files in $dest to check file sizes.
 ls -lh $dest
-echo
-echo
-echo "To restore, run: 
-cd /
-sudo tar -xzvf $dest/$archive_filename"
+echo "Shutting Down..."
+shutdown
