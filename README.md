@@ -10,7 +10,7 @@ Create comments.txt in the same directory image lies with nano.
 
 * Download this script to your external hard drive.
 * Boot from liveCD.
-* mount your hard drive.
+* mount your external hard drive.
 * Run this script.
 
 # Features
