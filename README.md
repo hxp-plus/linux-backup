@@ -1,6 +1,6 @@
 # linux-backup
 
-Automatically clone /dev/sda to a disk image in ./backup/<current-date>/ with dd.
+Automatically clone /dev/sda to a disk image in ./backup/(current-date)/ with dd.
 
 Backup partition table in the same directory.
 
